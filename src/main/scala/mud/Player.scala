@@ -23,6 +23,22 @@ class Player {
 
     }
 
+    if (command.startsWith("drop")) {
+
+    }
+
+    if (command == "north") {
+
+    }
+    if (command == "east") {
+      
+    }
+    if (command == "west") {
+      
+    }
+    if (command == "south") {
+      
+    }
   }
 def getFromInventory(itemName: String): Option[Item] = {
 val found = inv.find(item => itemName==item.name) 
