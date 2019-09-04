@@ -1,0 +1,21 @@
+CSI 257
+0, pod; 1, hallway; 2, icecube; 3, cs dept
+computer science classroom
+chair, something to sit on; computer, useful tool; tutor, life saver
+pod
+1, CSI 257
+where you buy food
+food, expensive; cashier, sells you food
+hallway
+0, CSI 257
+connects the cs dept to the main hall
+trashcans, receiver of trash; water fountain, hydrator
+icecube
+3, CSI 257
+because its so cold
+students, studier; chair, something to sit on; table, something not to sit on
+cs dept
+2, CSI 257
+where magic happens
+professor, teacher; computer, useful tool
+
