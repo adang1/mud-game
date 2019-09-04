@@ -20,13 +20,20 @@ class Player {
   
     }
     if (command.startsWith("get")) {
-
+      //loc.getItem(itemName)
+    }
+    if (command.startsWith("drop")) {
+      getFromInventory(itemName) match {
+        case Some(item) => ???
+        //loc.dropItem(Item)
+        case None => ???
+      }
     }
 
   }
 def getFromInventory(itemName: String): Option[Item] = {
-val found = inv.find(item => itemName==item.name) 
-inv = inv.filterNot(item => itemName==item.name)
+val found = inv.find(itemName => itemName==item.name) 
+inv = inv.filterNot(itemName => itemName==item.name)
 found
 }
 def addToInventory(item: Item): Unit = {
