@@ -1,20 +1,22 @@
 package mud
 
-import scala.io.Source._
-
+import scala.io._
 class Room(
   val name: String,
   val desc: String,
   private var items: List[Item],
   private val exits: Array[Int]) {
-  def description(): String = name + "," + desc + "," + exits
-    def getExit(dir: Int): Option[Room] = ???
+  
+    
+    def description(): String = name + "," + desc + "," + exits
+    def getExit(dir: Int): Option[Room] = 
+    
     def getItem(itemName: String): Option[Item] = ???
     def dropItem(item: Item): Unit = items ::= item
  }
 
 object Room {
-  val file = fromFile("map.txt")
+  val file = Source.fromFile("map.txt")
   var lines = file.getLines.toList
   def itemsplit(item:String): Item = {
     val index = item.indexOf(",")

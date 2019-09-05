@@ -22,8 +22,16 @@ class Player(val name:String) {
   
     }
     if (command.startsWith("get")) {
-      //loc.getItem(itemName)
-    }
+      /*val itemName = command.substring(5)
+      addtoInventory(itemName) match {
+        case Some(item) =>
+
+        println("item acquired")
+        loc.getItem(item)
+        case None => println("item not found")*/
+      }
+      
+    
     if (command.startsWith("drop")) {
       val itemName = command.substring(5)
       getFromInventory(itemName) match {
@@ -35,20 +43,18 @@ class Player(val name:String) {
       }
     }
 
-    if (command.startsWith("drop")) {
+
+    if (command == "N") {
+      move("N")
 
     }
-
-    if (command == "north") {
-
-    }
-    if (command == "east") {
+    if (command == "E") {
       
     }
-    if (command == "west") {
+    if (command == "W") {
       
     }
-    if (command == "south") {
+    if (command == "S") {
       
     }
   }
@@ -64,6 +70,15 @@ inv = item :: inv
 def inventoryListing(): String = {
   inv.mkString(",")
 }
-def move(dir: String): Unit = ???
+def move(dir: String): Unit = {
+  var dirInd = 0
+  if (dir == "N") dirInd = 0
+  if (dir == "S") dirInd = 1
+  if (dir == "E") dirInd = 2
+  if (dir == "W") dirInd = 3
+  if (dir == "U") dirInd = 4
+  if (dir == "D") dirInd = 5
+
+}
 
 }

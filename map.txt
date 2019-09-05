@@ -1,5 +1,5 @@
 CSI 257
-0, 1, 2, 3
+0,1,2,3,-1,-1
 computer science classroom
 chair, something to sit on; computer, useful tool; tutor, life saver
 pod
