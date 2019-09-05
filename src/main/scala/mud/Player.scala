@@ -1,7 +1,9 @@
 package mud
 
-class Player {
+class Player(val name:String) {
+  var loc = Room.roomList(0)
   var inv: List[Item] = List()
+  
   def processCommand(command:String): Unit = {
     if (command == "help") {
       println ("N,S,E,W,U,D - for movements (north,south,east,west,up,down)")
@@ -23,10 +25,13 @@ class Player {
       //loc.getItem(itemName)
     }
     if (command.startsWith("drop")) {
+      val itemName = command.substring(5)
       getFromInventory(itemName) match {
-        case Some(item) => ???
-        //loc.dropItem(Item)
-        case None => ???
+        case Some(item) => 
+
+        println("item dropped")
+        loc.dropItem(item)
+        case None => println("item not found")
       }
     }
 
@@ -48,15 +53,16 @@ class Player {
     }
   }
 def getFromInventory(itemName: String): Option[Item] = {
-val found = inv.find(itemName => itemName==item.name) 
-inv = inv.filterNot(itemName => itemName==item.name)
+
+  val found = inv.find(x => itemName == x) 
+inv = inv.filterNot(x => itemName == x)
 found
 }
 def addToInventory(item: Item): Unit = {
 inv = item :: inv
 }
 def inventoryListing(): String = {
-  inv.map(_.name).mkString(",")
+  inv.mkString(",")
 }
 def move(dir: String): Unit = ???
 

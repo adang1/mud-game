@@ -7,8 +7,8 @@ object Main {
 	def main(args: Array[String]): Unit = {
 		println("Welcome to my MUD.")
 		println("Enter your name: ")
-		var name = readLine()
-		val player = new Player
+		val name = readLine()
+		val player = new Player(name)
 		
 		/* description of the room
 		 */
