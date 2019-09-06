@@ -7,9 +7,19 @@ class Room(
   private var items: List[Item],
   private val exits: Array[Int]) {
   
-    
-    def description(): String = name + "," + desc + "," + exits
-    def getExit(dir: Int): Option[Room] = 
+    def printexits(): String = {
+    var exitString: String = ""
+    if (exits(0) != -1) exitString += "North"
+    if (exits(1) != -1) exitString += "South"
+    if (exits(2) != -1) exitString += "East"
+    if (exits(3) != -1) exitString += "West"
+    if (exits(4) != -1) exitString += "Up"
+    if (exits(5) != -1) exitString += "Down"
+    exitString
+    } 
+    def description(): String = name + "," + desc + "," + printexits
+   
+    def getExit(dir: Int): Option[Room] = ???
     
     def getItem(itemName: String): Option[Item] = ???
     def dropItem(item: Item): Unit = items ::= item

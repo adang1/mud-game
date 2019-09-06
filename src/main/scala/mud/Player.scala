@@ -15,6 +15,7 @@ class Player(val name:String) {
       println ("help - open the help menu")
     }
     if (command == "look") {
+      println(loc.description)
   
     }
     if (command == "inv") {
