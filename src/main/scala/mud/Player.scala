@@ -46,7 +46,7 @@ class Player(val name:String) {
 
 
     if (command == "N") {
-      move("N")
+      loc = Room.roomList(move("N"))
 
     }
     if (command == "E") {
@@ -79,7 +79,7 @@ def move(dir: String): Unit = {
   if (dir == "W") dirInd = 3
   if (dir == "U") dirInd = 4
   if (dir == "D") dirInd = 5
-
+  
 }
 
 }

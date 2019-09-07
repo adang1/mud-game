@@ -9,15 +9,22 @@ class Room(
   
     def printexits(): String = {
     var exitString: String = ""
-    if (exits(0) != -1) exitString += "North"
-    if (exits(1) != -1) exitString += "South"
-    if (exits(2) != -1) exitString += "East"
-    if (exits(3) != -1) exitString += "West"
-    if (exits(4) != -1) exitString += "Up"
-    if (exits(5) != -1) exitString += "Down"
-    exitString
+    if (exits(0) != -1) exitString += "North, " 
+    if (exits(1) != -1) exitString += "South, " 
+    if (exits(2) != -1) exitString += "East, " 
+    if (exits(3) != -1) exitString += "West, " 
+    if (exits(4) != -1) exitString += "Up, " 
+    if (exits(5) != -1) exitString += "Down, " 
+    "Exits: " + exitString // needs reformatting
     } 
-    def description(): String = name + "," + desc + "," + printexits
+    
+    def printitems(): String = {
+      var itemString: String = ""
+      // no idea
+      "Items: " + itemString
+    }
+    
+    def description(): String = name + "\n" + desc + "\n" + printexits + "\n" + printitems
    
     def getExit(dir: Int): Option[Room] = ???
     
@@ -44,6 +51,5 @@ object Room {
       lines = lines.drop(4)
       room
     }).toArray
-
   }
  }
