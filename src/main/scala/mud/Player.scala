@@ -23,13 +23,13 @@ class Player(val name:String) {
   
     }
     if (command.startsWith("get")) {
-      /*val itemName = command.substring(5)
+      val itemName = command.substring(5)
       addtoInventory(itemName) match {
         case Some(item) =>
 
         println("item acquired")
         loc.getItem(item)
-        case None => println("item not found")*/
+        case None => println("item not found")
       }
       
     
@@ -46,7 +46,8 @@ class Player(val name:String) {
 
 
     if (command == "N") {
-      loc = Room.roomList(move("N"))
+      
+      }
 
     }
     if (command == "E") {
@@ -59,11 +60,13 @@ class Player(val name:String) {
       
     }
   }
+
+  def getExit
 def getFromInventory(itemName: String): Option[Item] = {
 
-  val found = inv.find(x => itemName == x) 
+  val foundItem = inv.find(x => itemName == x) 
 inv = inv.filterNot(x => itemName == x)
-found
+foundItem
 }
 def addToInventory(item: Item): Unit = {
 inv = item :: inv

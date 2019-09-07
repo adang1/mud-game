@@ -26,7 +26,10 @@ class Room(
     
     def description(): String = name + "\n" + desc + "\n" + printexits + "\n" + printitems
    
-    def getExit(dir: Int): Option[Room] = ???
+    def getExit(dir: Int): Option[Int] = { // option[Item] ?
+      val foundExit = exits.find(x => dir == x)
+      foundExit
+    }
     
     def getItem(itemName: String): Option[Item] = ???
     def dropItem(item: Item): Unit = items ::= item
