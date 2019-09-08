@@ -1,21 +1,21 @@
 CSI 257
 0,1,2,3,-1,-1
 computer science classroom
-chair, something to sit on; computer, useful tool; tutor, life saver
+chair, something to sit on;computer, useful tool;board, doodling tool
 pod
 -1,1,-1,-1,-1,-1
 where you buy food
-food, expensive; cashier, sells you food
+food, expensive; candies, unhealthy 
 hallway
 0,-1,-1,-1,-1,-1
 connects the cs dept to the main hall
-trashcans, receiver of trash; water fountain, hydrator
+trashcans, receiver of trash;water fountain, hydrator
 icecube
 -1,-1,-1,3,-1,-1
-because its so cold
-students, studier; chair, something to sit on; table, something not to sit on
+because its so cold all the time
+chair, something to sit on;table, something not to sit on;board, doodling tool
 cs dept
 -1,-1,2,-1,-1,-1
 where magic happens
-professor, teacher; computer, useful tool
+professor, teacher;computer, useful tool
 

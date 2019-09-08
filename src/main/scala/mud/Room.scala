@@ -20,18 +20,27 @@ class Room(
     
     def printitems(): String = {
       var itemString: String = ""
-      // no idea
+      for (x <- items) {
+        itemString += x.name + x.desc + "\n" 
+      }
       "Items: " + itemString
     }
     
     def description(): String = name + "\n" + desc + "\n" + printexits + "\n" + printitems
    
-    def getExit(dir: Int): Option[Int] = { // option[Item] ?
-      val foundExit = exits.find(x => dir == x)
-      foundExit
+    def getExit(dir: Int): Option[Room] = { 
+      if (exits(dir) == -1) None
+      else Some(Room.roomList(exits(dir)))
     }
     
-    def getItem(itemName: String): Option[Item] = ???
+    def getItem(itemName: String): Option[Item] = {
+      val finditem = items.find(x => itemName == x.name)
+      finditem match {
+        case None => 
+        case Some(item) => items = items.filter(x => item.name != x.name)
+      }
+      finditem
+    }
     def dropItem(item: Item): Unit = items ::= item
  }
 

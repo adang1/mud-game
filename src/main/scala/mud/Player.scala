@@ -14,66 +14,72 @@ class Player(val name:String) {
       println ("exit - leave the game")
       println ("help - open the help menu")
     }
-    if (command == "look") {
+    else if (command == "look") {
       println(loc.description)
   
     }
-    if (command == "inv") {
+    else if (command == "inv") {
       println(inventoryListing())
   
     }
-    if (command.startsWith("get")) {
-      val itemName = command.substring(5)
-      addtoInventory(itemName) match {
+    else if (command.startsWith("get")) {
+      val itemName = command.substring(4)
+      loc.getItem(itemName) match {
         case Some(item) =>
-
-        println("item acquired")
-        loc.getItem(item)
-        case None => println("item not found")
+        println(s"$itemName acquired")
+        addToInventory(item)
+        case None => println(s"$itemName not found in room")
       }
-      
-    
-    if (command.startsWith("drop")) {
+    }
+    else if (command.startsWith("drop")) {
       val itemName = command.substring(5)
+      println(itemName)
       getFromInventory(itemName) match {
-        case Some(item) => 
-
-        println("item dropped")
+        case Some(item) =>
         loc.dropItem(item)
-        case None => println("item not found")
+        println(s"$itemName dropped")
+        case None => println(s"$itemName not found in inventory")
       }
-    }
-
-
-    if (command == "N") {
+      }
+    else if (command == "N") {
+      move("N")
       
       }
 
+    else if (command == "E") {
+      move("E")
     }
-    if (command == "E") {
-      
+    else if (command == "W") {
+      move("W")
     }
-    if (command == "W") {
-      
+    else if (command == "S") {
+      move("S")
     }
-    if (command == "S") {
-      
+    else if (command == "U") {
+      move("U")
+    }
+    else if (command == "D") {
+      move("D")
     }
   }
 
-  def getExit
+def getExit = ???
 def getFromInventory(itemName: String): Option[Item] = {
-
-  val foundItem = inv.find(x => itemName == x) 
-inv = inv.filterNot(x => itemName == x)
-foundItem
+  val foundItem = inv.find(x => itemName == x.name) 
+  inv = inv.filterNot(x => itemName == x.name)
+  foundItem
 }
 def addToInventory(item: Item): Unit = {
-inv = item :: inv
+  inv = item :: inv
 }
 def inventoryListing(): String = {
-  inv.mkString(",")
+  var invlist: String = ""
+  for (x <- inv) {
+    invlist += x.name + ","
+  }
+invlist
 }
+
 def move(dir: String): Unit = {
   var dirInd = 0
   if (dir == "N") dirInd = 0
@@ -82,7 +88,11 @@ def move(dir: String): Unit = {
   if (dir == "W") dirInd = 3
   if (dir == "U") dirInd = 4
   if (dir == "D") dirInd = 5
-  
+  loc.getExit(dirInd) match {
+    case None => println("no exit in this direction")
+    case Some(room) => loc = room
+  }
+  loc.description()
 }
 
 }
