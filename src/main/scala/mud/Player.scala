@@ -43,9 +43,7 @@ class Player(val name:String) {
       }
     else if (command == "N") {
       move("N")
-      
       }
-
     else if (command == "E") {
       move("E")
     }
@@ -63,7 +61,7 @@ class Player(val name:String) {
     }
   }
 
-def getExit = ???
+
 def getFromInventory(itemName: String): Option[Item] = {
   val foundItem = inv.find(x => itemName == x.name) 
   inv = inv.filterNot(x => itemName == x.name)
