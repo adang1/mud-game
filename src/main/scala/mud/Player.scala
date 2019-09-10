@@ -79,6 +79,7 @@ invlist
 }
 
 def move(dir: String): Unit = {
+  
   var dirInd = 0
   if (dir == "N") dirInd = 0
   if (dir == "S") dirInd = 1
