@@ -1,7 +1,7 @@
 package mud
 
 class Player(val name:String) {
-  var loc = Room.roomList(0)
+  var loc = Room.roomList("c")
   var inv: List[Item] = List()
   
   def processCommand(command:String): Unit = {

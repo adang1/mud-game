@@ -5,7 +5,6 @@ This is a stub for the main class for your MUD.
 */
 object Main {
 	def main(args: Array[String]): Unit = {
-		//Room.roomList.foreach(x => println(x.description()))
 		println("Welcome to my MUD.")
 		println("Enter your name: ")
 		val name = readLine()

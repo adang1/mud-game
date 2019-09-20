@@ -5,16 +5,16 @@ class Room(
   val name: String,
   val desc: String,
   private var items: List[Item],
-  private val exits: Array[Int]) {
+  private val exits: Array[String]) {
   
     def printexits(): String = {
     var exitString: String = ""
-    if (exits(0) != -1) exitString += "North, " 
-    if (exits(1) != -1) exitString += "South, " 
-    if (exits(2) != -1) exitString += "East, " 
-    if (exits(3) != -1) exitString += "West, " 
-    if (exits(4) != -1) exitString += "Up, " 
-    if (exits(5) != -1) exitString += "Down, " 
+    if (exits(0) != "-1") exitString += "North, " 
+    if (exits(1) != "-1") exitString += "South, " 
+    if (exits(2) != "-1") exitString += "East, " 
+    if (exits(3) != "-1") exitString += "West, " 
+    if (exits(4) != "-1") exitString += "Up, " 
+    if (exits(5) != "-1") exitString += "Down, " 
     "Exits: " + exitString // needs reformatting
     } 
     
@@ -46,22 +46,26 @@ class Room(
 
 object Room {
   val file = Source.fromFile("map.txt")
-  var lines = file.getLines.toList
+  var lines = file.getLines.toArray
   def itemsplit(item:String): Item = {
     val index = item.indexOf(",")
     new Item(item.substring(0,index), item.substring(index))
   }
   def readMap(lines: Array[String]): Room = {
     val items = lines(3).split(";").map(itemsplit).toList
-    val exits = lines(1).split(",").map(_.toInt)
-    new Room(lines(0),lines(2),items,exits)
+    val exits = lines(1).split(",")
+    new Room(lines(0).split(",")(0),lines(2),items,exits)
     
   }
-  val roomList: Array[Room] = {
+  val roomList: Map[String,Room] = {
     (for (i <- 1 to lines.length/4) yield {
-      val room = readMap(lines.take(4).toArray)
+      val room = readMap(lines.take(4))
+      val key = lines(0).split(",")(1)
       lines = lines.drop(4)
-      room
-    }).toArray
+      (key -> room)
+    }).toMap[String,Room]
   }
- }
+}
+
+  
+ 
