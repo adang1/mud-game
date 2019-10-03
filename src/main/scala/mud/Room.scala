@@ -45,6 +45,21 @@ class Room(
  }
 
 object Room {
+  /* val rooms = readRooms()
+  def readRooms(): Map[String, Room] = {
+    val xmlData = xml.XML.loadFile("map.xml")
+    xmlData.map(readRoom).map(r => r.keyword -> r).toMap
+  }
+
+  def readRoom(node: xml.Node): Room = {
+    val keyword = (node \ "@keyword").text
+    val name = (node \ "@name").text
+    val description = (node \ "description").text.trim
+    val exits = (node \ "exits").text.split(",")
+    val item = (node \ "item").map(n => Item((n \ "@name").text,n.text.trim)).toList
+    new Room(keyword,name,description,exits,item)
+  }
+  */
   val file = Source.fromFile("map.txt")
   var lines = file.getLines.toArray
   def itemsplit(item:String): Item = {
