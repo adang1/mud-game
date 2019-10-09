@@ -1,12 +1,20 @@
 package mud
 
+import akka.actor.Actor
 import scala.io._
+
 class Room(
+  val keyword: String,
   val name: String,
   val desc: String,
-  private var items: List[Item],
-  private val exits: Array[String]) {
-  
+  private val exits: Array[String],
+  private var items: List[Item]) /*extends Actor*/ {
+    
+    /*def receive = {
+      case m => println("Unhandled msg in Room: " + m)
+   
+    }
+    */
     def printexits(): String = {
     var exitString: String = ""
     if (exits(0) != "-1") exitString += "North, " 
@@ -15,7 +23,7 @@ class Room(
     if (exits(3) != "-1") exitString += "West, " 
     if (exits(4) != "-1") exitString += "Up, " 
     if (exits(5) != "-1") exitString += "Down, " 
-    "Exits: " + exitString // needs reformatting
+    "Exits: " + exitString 
     } 
     
     def printitems(): String = {
@@ -30,7 +38,7 @@ class Room(
    
     def getExit(dir: Int): Option[Room] = { 
       if (exits(dir) == -1) None
-      else Some(Room.roomList(exits(dir)))
+      else Some(Room.rooms(exits(dir)))
     }
     
     def getItem(itemName: String): Option[Item] = {
@@ -45,10 +53,11 @@ class Room(
  }
 
 object Room {
-  /* val rooms = readRooms()
+  val rooms = readRooms()
+  rooms.foreach(println)
   def readRooms(): Map[String, Room] = {
     val xmlData = xml.XML.loadFile("map.xml")
-    xmlData.map(readRoom).map(r => r.keyword -> r).toMap
+    (xmlData \ "Room").map(readRoom).map(r => r.keyword -> r).toMap
   }
 
   def readRoom(node: xml.Node): Room = {
@@ -59,7 +68,8 @@ object Room {
     val item = (node \ "item").map(n => Item((n \ "@name").text,n.text.trim)).toList
     new Room(keyword,name,description,exits,item)
   }
-  */
+}
+  /*
   val file = Source.fromFile("map.txt")
   var lines = file.getLines.toArray
   def itemsplit(item:String): Item = {
@@ -81,6 +91,7 @@ object Room {
     }).toMap[String,Room]
   }
 }
+*/
 
   
  

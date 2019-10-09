@@ -1,0 +1,27 @@
+<Rooms> 
+<Room name="CSI 257" keyword="c">
+<description>computer science classroom</description>
+<exits>p,h,i,d,-1,-1</exits>
+<item>chair, something to sit on;computer, useful tool;board, doodling tool</item>
+</Room>
+<Room name="pod" keyword="p">
+<description>where you buy food</description>
+<exits>-1,c,-1,-1,-1,-1</exits>
+<item>food, expensive; candies, unhealthy</item>
+</Room>
+<Room name="hallway" keyword="h">
+<description>connects the cs dept to the main hall</description>
+<exits>c,-1,-1,-1,-1,-1</exits>
+<item>trashcans, receiver of trash;water fountain, hydrator</item>
+</Room>
+<Room name="icecube" keyword="i">
+<description>because its so cold all the time</description>
+<exits>-1,-1,-1,c,1,-1</exits>
+<item>chair, something to sit on;table, something not to sit on;board, doodling tool</item>
+</Room>
+<Room name="cs dept" keyword="d">
+<description>where magic happens</description>
+<exits>-1,-1,c,-1,-1,-1</exits>
+<item>professor, teacher;computer, useful tool</item>
+</Room>
+</Rooms>

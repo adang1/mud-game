@@ -1,6 +1,6 @@
 package mud
 
-class Item (val name: String,
+case class Item (val name: String,
             val desc: String) {
                 
             }
