@@ -1,97 +1,80 @@
 package mud
 
 import akka.actor.Actor
-import scala.io._
+import akka.actor.ActorRef
 
 class Room(
-  val keyword: String,
-  val name: String,
-  val desc: String,
-  private val exits: Array[String],
-  private var items: List[Item]) /*extends Actor*/ {
-    
-    /*def receive = {
-      case m => println("Unhandled msg in Room: " + m)
-   
+    val keyword: String,
+    name: String,
+    desc: String,
+    private val exitKeys: Array[String],
+    private var items: List[Item]
+) extends Actor {
+
+  private var exits: Array[Option[ActorRef]] = null
+  import Room._
+
+  def receive = {
+    case LinkExits(rooms) =>
+      exits = exitKeys.map(key => rooms.get(key))
+    case GetItem(itemName) =>
+      sender ! Player.TakeItem(getItem(itemName))
+    case DropItem(item) => ???
+    case GetExit(dir)   => ???
+    case GetDescription => 
+      sender ! Player.PrintMessage(description())
+    case m => println("Unhandled msg in Room: " + m)
+
+  }
+
+  def printExits(): String = {
+    var x = "Exits: "
+    if (exits(0).nonEmpty) x += "North "
+    if (exits(1).nonEmpty) x += "South "
+    if (exits(2).nonEmpty) x += "East "
+    if (exits(3).nonEmpty) x += "West "
+    if (exits(4).nonEmpty) x += "Up "
+    if (exits(5).nonEmpty) x += "Down "
+    x
+  }
+
+  def printItems(): String = {
+    var y = "Items: "
+    for (item <- items) {
+      y += item.name + " "
     }
-    */
-    def printexits(): String = {
-    var exitString: String = ""
-    if (exits(0) != "-1") exitString += "North, " 
-    if (exits(1) != "-1") exitString += "South, " 
-    if (exits(2) != "-1") exitString += "East, " 
-    if (exits(3) != "-1") exitString += "West, " 
-    if (exits(4) != "-1") exitString += "Up, " 
-    if (exits(5) != "-1") exitString += "Down, " 
-    "Exits: " + exitString 
-    } 
-    
-    def printitems(): String = {
-      var itemString: String = ""
-      for (x <- items) {
-        itemString += x.name + x.desc + "\n" 
-      }
-      "Items: " + itemString
+    y
+  }
+
+  def description(): String =
+    name + "\n" + desc + "\n" + printExits() + "\n" + printItems()
+
+  def getExit(dir: Int): Option[ActorRef] = {
+    exits(dir)
+  }
+
+  def getItem(itemName: String): Option[Item] = {
+    var y: Boolean = false
+    var z: Int = 0
+    for (x <- items) {
+      if (!y) z = z + 1
+      if (x.name == itemName) y = true
     }
-    
-    def description(): String = name + "\n" + desc + "\n" + printexits + "\n" + printitems
-   
-    def getExit(dir: Int): Option[Room] = { 
-      if (exits(dir) == -1) None
-      else Some(Room.rooms(exits(dir)))
+    if (y) {
+      val gotItem = Some(items(z - 1))
+      items = items.filter(x => x != gotItem.get)
+      gotItem
+    } else {
+      None
     }
-    
-    def getItem(itemName: String): Option[Item] = {
-      val finditem = items.find(x => itemName == x.name)
-      finditem match {
-        case None => 
-        case Some(item) => items = items.filter(x => item.name != x.name)
-      }
-      finditem
-    }
-    def dropItem(item: Item): Unit = items ::= item
- }
+  }
+  def dropItem(item: Item): Unit = items ::= item
+}
 
 object Room {
-  val rooms = readRooms()
-  rooms.foreach(println)
-  def readRooms(): Map[String, Room] = {
-    val xmlData = xml.XML.loadFile("map.xml")
-    (xmlData \ "Room").map(readRoom).map(r => r.keyword -> r).toMap
-  }
-
-  def readRoom(node: xml.Node): Room = {
-    val keyword = (node \ "@keyword").text
-    val name = (node \ "@name").text
-    val description = (node \ "description").text.trim
-    val exits = (node \ "exits").text.split(",")
-    val item = (node \ "item").map(n => Item((n \ "@name").text,n.text.trim)).toList
-    new Room(keyword,name,description,exits,item)
-  }
+  case class GetItem(itemName: String)
+  case class DropItem(item: Item)
+  case class GetExit(dir: Int)
+	case object GetDescription
+	case class LinkExits(rooms: Map[String, ActorRef])
 }
-  /*
-  val file = Source.fromFile("map.txt")
-  var lines = file.getLines.toArray
-  def itemsplit(item:String): Item = {
-    val index = item.indexOf(",")
-    new Item(item.substring(0,index), item.substring(index))
-  }
-  def readMap(lines: Array[String]): Room = {
-    val items = lines(3).split(";").map(itemsplit).toList
-    val exits = lines(1).split(",")
-    new Room(lines(0).split(",")(0),lines(2),items,exits)
-    
-  }
-  val roomList: Map[String,Room] = {
-    (for (i <- 1 to lines.length/4) yield {
-      val room = readMap(lines.take(4))
-      val key = lines(0).split(",")(1)
-      lines = lines.drop(4)
-      (key -> room)
-    }).toMap[String,Room]
-  }
-}
-*/
-
-  
- 

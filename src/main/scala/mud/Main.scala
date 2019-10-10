@@ -8,14 +8,16 @@ object Main {
 		println("Welcome to my MUD.")
 		println("Enter your name: ")
 		val name = readLine()
-		val player = new Player(name)
+		val player = new Player()
 		
 		/* description of the room
 		 */
 	   var command = readLine
-	   while (command != "exit") {
-		 player.processCommand(command)
-		 command = readLine   
-	}
+// 	   while (command != "exit") {
+// 		 player.processCommand(command)
+// 		 command = readLine   
+// 	}
+// 	}
+// }
 	}
 }
