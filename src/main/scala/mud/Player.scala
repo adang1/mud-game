@@ -3,12 +3,19 @@ package mud
 import akka.actor.Actor
 import akka.actor.ActorRef
 
-class Player(val name:String) extends Actor {
+class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
   import Player._
   def receive = {
-    case ProcessCommand(command) => ???
-    case PrintMessage(msg) => ???
-    case TakeItem(itemName) => ???
+    case ProcessCommand(command) => {
+      processCommand(command)
+    }
+    case CheckAllInput => 
+    case PrintMessage(msg) => println(msg)
+    case TakeItem(itemName) => {
+      // if there is any item:
+    items :: itemName
+      // else println("$itemname does not exist")
+    }
     case TakeExit(itemName) => ???
     
 
