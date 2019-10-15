@@ -2,6 +2,8 @@ package mud
 
 import akka.actor.Actor
 import akka.actor.ActorRef
+import java.io.PrintStream
+import java.io.BufferedReader
 
 class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
   import Player._
@@ -10,6 +12,11 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
       processCommand(command)
     }
     case CheckAllInput => 
+    if(in.ready()) {
+      val command = in.readLine()
+      processCommand(command)
+    }
+    
     case PrintMessage(msg) => println(msg)
     case TakeItem(itemName) => {
       // if there is any item:
@@ -119,6 +126,8 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
 
 
 object Player {
+  case class ProcessCommand(command: String)
+  case object CheckAllInput
   case class PrintMessage(msg: String)
   case class TakeItem(oitem: Option[Item])
   case class TakeExit(oroom: Option[ActorRef])
