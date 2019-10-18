@@ -4,6 +4,7 @@ import akka.actor.Actor
 import akka.actor.ActorRef
 import java.io.PrintStream
 import java.io.BufferedReader
+import mud.Room.GetDescription
 
 class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
   import Player._
@@ -12,59 +13,69 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
       processCommand(command)
     }
     case CheckAllInput => 
+    
     if(in.ready()) {
       val command = in.readLine()
+      
       processCommand(command)
     }
     
-    case PrintMessage(msg) => println(msg)
-    case TakeItem(itemName) => {
+    case PrintMessage(msg) => out.println(msg)
+    case TakeItem(oitem) => {
+      oitem match {
+        case Some(item) => 
+        println(s"${item.name} acquired")
+        addToInventory(item)
+        case None => println("Item not found in room")
+      }
       // if there is any item:
-    items :: itemName
+    // items :: itemName
       // else println("$itemname does not exist")
     }
-    case TakeExit(itemName) => ???
+    case TakeExit(oroom) => {
+      oroom match {
+        case None => out.println("no exit in this direction")
+        case Some(room) => loc = room
+      }
+      loc ! GetDescription
+    }
     
 
 
     case m => println("Unhandled msg in Player: " + m)
   }
-  var loc = Room.rooms("c")
+  var loc: ActorRef = null
     var inv: List[Item] = List()
     
     def processCommand(command:String): Unit = {
       if (command == "help") {
-        println ("N,S,E,W,U,D - for movements (north,south,east,west,up,down)")
-        println ("look - reprints the description of the current room")
-        println ("inv - list the contents in the inventory")
-        println ("get item - get an item and add to inventory")
-        println ("drop item - drop an item into the room")
-        println ("exit - leave the game")
-        println ("help - open the help menu")
+        out.println ("N,S,E,W,U,D - for movements (north,south,east,west,up,down)")
+        out.println ("look - reprints the description of the current room")
+        out.println ("inv - list the contents in the inventory")
+        out.println ("get item - get an item and add to inventory")
+        out.println ("drop item - drop an item into the room")
+        out.println ("exit - leave the game")
+        out.println ("help - open the help menu")
       }
       else if (command == "look") {
-        println(loc.description)
+        loc ! GetDescription
     
       }
       else if (command == "inv") {
-        println(inventoryListing())
+        out.println(inventoryListing())
     
       }
       else if (command.startsWith("get")) {
         val itemName = command.substring(4)
-        loc.getItem(itemName) match {
-          case Some(item) =>
-          println(s"$itemName acquired")
-          addToInventory(item)
-          case None => println(s"$itemName not found in room")
-        }
+        loc ! Room.GetItem(itemName)
+        
       }
       else if (command.startsWith("drop")) {
         val itemName = command.substring(5)
         println(itemName)
         getFromInventory(itemName) match {
           case Some(item) =>
-          loc.dropItem(item)
+          loc ! Room.DropItem(item)
           println(s"$itemName dropped")
           case None => println(s"$itemName not found in inventory")
         }
@@ -115,11 +126,7 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
     if (dir == "W") dirInd = 3
     if (dir == "U") dirInd = 4
     if (dir == "D") dirInd = 5
-    loc.getExit(dirInd) match {
-      case None => println("no exit in this direction")
-      case Some(room) => loc = room
-    }
-    loc.description()
+    loc ! Room.GetExit(dirInd)
   }
   
   }

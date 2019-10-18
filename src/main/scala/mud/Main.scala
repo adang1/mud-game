@@ -13,27 +13,27 @@ This is a stub for the main class for your MUD.
 object Main extends App {
 	
 		println("Welcome to my MUD.")
-		println("Enter your name: ")
-		 val name = readLine()
+		
+		
 		 val system = ActorSystem("MUD")
 
-  val manager = system.actorOf(Props[PlayerManager], "player")
+  
 
   implicit val ec = system.dispatcher
 
   val playMng = system.actorOf(Props[PlayerManager], "playMng")
   val roomMng = system.actorOf(Props[RoomManager], "roomMng")
   
-  system.scheduler.schedule(1.second, 0.1.second, manager, PlayerManager.CheckAllInput)
+  system.scheduler.schedule(1.second, 0.1.second, playMng, PlayerManager.CheckAllInput)
 
     
-  //   Future {
-  //     val out = new PrintStream(sock.getOutputStream())
-  //     val in = new BufferedReader(new InputStreamReader(sock.getInputStream()))
-  //     println("What is your name?")
-  //     val name = in.readLine()
-  //     println(name + " has connected.")
-  //     playMng ! PlayerManager.CreatePlayer(name, out, in)
+    // Future {
+      val out = Console.out//new PrintStream(sock.getOutputStream())
+      val in = Console.in//new BufferedReader(new InputStreamReader(sock.getInputStream()))
+      out.println("What is your name?")
+      val name = in.readLine()
+      println(name + " has connected.")
+      playMng ! PlayerManager.CreatePlayer(name, out, in)
   //   }
   // }
 

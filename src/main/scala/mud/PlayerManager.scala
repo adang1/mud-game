@@ -4,26 +4,28 @@ import akka.actor.ActorRef
 import akka.actor.Props
 import java.io.PrintStream
 import java.io.BufferedReader
+import mud.RoomManager.AddPlayerToRoom
+
 
 class PlayerManager extends Actor {
 
   import PlayerManager._
   def receive = {
-    case CreatePlayer(nameOfNewPlayer) => {
-      val in = Console.in
-      val out = Console.out
+    case CreatePlayer(nameOfNewPlayer, out, in) => {
+      
       val newPlayer = context.actorOf(Props(new Player(nameOfNewPlayer, out, in)), nameOfNewPlayer)
+      Main.roomMng ! AddPlayerToRoom(newPlayer, "c")
     }
     case CheckAllInput =>
     for (child <- context.children) child ! Player.CheckAllInput
-    case SendToAll(msg) =>
+    case SendToAll(msg) =>  
     for (child <- context.children) child ! Player.PrintMessage(msg)
     case m => println("Unhandled message in PlayerManager: " + m)
   }
 }
 
 object PlayerManager {
-  case class CreatePlayer(name: String)
+  case class CreatePlayer(name: String, out: PrintStream, in: BufferedReader)
   case object CheckAllInput
   case class SendToAll(msg: String)
 }

@@ -1,4 +1,3 @@
-
 package mud
 import akka.actor.Actor
 import akka.actor.ActorRef
@@ -18,7 +17,7 @@ class RoomManager extends Actor {
 
 	def readRooms(): Map[String, ActorRef] = {
 		val xmlData = xml.XML.loadFile("map.xml")
-		(xmlData \ "room").map(readRoom).toMap
+		(xmlData \ "Room").map(readRoom).toMap
   }
   
 	def readRoom(node: xml.Node): (String, ActorRef) = {

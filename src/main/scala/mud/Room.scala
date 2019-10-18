@@ -19,8 +19,10 @@ class Room(
       exits = exitKeys.map(key => rooms.get(key))
     case GetItem(itemName) =>
       sender ! Player.TakeItem(getItem(itemName))
-    case DropItem(item) => ???
-    case GetExit(dir)   => ???
+    case DropItem(item) => 
+    dropItem(item)
+    case GetExit(dir)   => 
+    sender ! Player.TakeExit(getExit(dir))
     case GetDescription => 
       sender ! Player.PrintMessage(description())
     case m => println("Unhandled msg in Room: " + m)
