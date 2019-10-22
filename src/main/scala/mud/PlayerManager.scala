@@ -1,5 +1,6 @@
 package mud
 import akka.actor.Actor
+import java.net.Socket
 import akka.actor.ActorRef
 import akka.actor.Props
 import java.io.PrintStream
@@ -11,7 +12,7 @@ class PlayerManager extends Actor {
 
   import PlayerManager._
   def receive = {
-    case CreatePlayer(nameOfNewPlayer, out, in) => {
+    case CreatePlayer(nameOfNewPlayer, sock, out, in) => {
       
       val newPlayer = context.actorOf(Props(new Player(nameOfNewPlayer, out, in)), nameOfNewPlayer)
       Main.roomMng ! AddPlayerToRoom(newPlayer, "c")
@@ -25,7 +26,7 @@ class PlayerManager extends Actor {
 }
 
 object PlayerManager {
-  case class CreatePlayer(name: String, out: PrintStream, in: BufferedReader)
+  case class CreatePlayer(name: String, sock: Socket, out: PrintStream, in: BufferedReader)
   case object CheckAllInput
   case class SendToAll(msg: String)
 }

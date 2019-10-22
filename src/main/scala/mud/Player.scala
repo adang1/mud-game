@@ -98,8 +98,9 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
       else if (command == "D") {
         move("D")
       }
+    
+    
     }
-  
   
   def getFromInventory(itemName: String): Option[Item] = {
     val foundItem = inv.find(x => itemName == x.name) 

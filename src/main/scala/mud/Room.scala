@@ -31,19 +31,19 @@ class Room(
 
   def printExits(): String = {
     var x = "Exits: "
-    if (exits(0).nonEmpty) x += "North "
-    if (exits(1).nonEmpty) x += "South "
-    if (exits(2).nonEmpty) x += "East "
-    if (exits(3).nonEmpty) x += "West "
-    if (exits(4).nonEmpty) x += "Up "
-    if (exits(5).nonEmpty) x += "Down "
+    if (exits(0).nonEmpty) x += "North, "
+    if (exits(1).nonEmpty) x += "South, "
+    if (exits(2).nonEmpty) x += "East, "
+    if (exits(3).nonEmpty) x += "West, "
+    if (exits(4).nonEmpty) x += "Up, "
+    if (exits(5).nonEmpty) x += "Down, "
     x
   }
 
   def printItems(): String = {
     var y = "Items: "
     for (item <- items) {
-      y += item.name + " "
+      y += item.name + ", "
     }
     y
   }

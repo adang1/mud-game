@@ -26,14 +26,19 @@ object Main extends App {
   
   system.scheduler.schedule(1.second, 0.1.second, playMng, PlayerManager.CheckAllInput)
 
-    
-    // Future {
-      val out = Console.out//new PrintStream(sock.getOutputStream())
-      val in = Console.in//new BufferedReader(new InputStreamReader(sock.getInputStream()))
+    val ss = ServerSocket(4041) 
+    while(true) {
+      val sock = ss.accept()
+     Future {
+      val out = new PrintStream(sock.getOutputStream())
       out.println("What is your name?")
+      val in = new BufferedReader(new InputStreamReader(sock.getInputStream()))
       val name = in.readLine()
       println(name + " has connected.")
-      playMng ! PlayerManager.CreatePlayer(name, out, in)
+      playMng ! PlayerManager.CreatePlayer(name, sock, out, in)
+     }
+    }
+  }
   //   }
   // }
 
@@ -50,4 +55,3 @@ object Main extends App {
 // // }
 // 	}
 
-}
