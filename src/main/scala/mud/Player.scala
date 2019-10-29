@@ -24,9 +24,9 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
     case TakeItem(oitem) => {
       oitem match {
         case Some(item) => 
-        println(s"${item.name} acquired")
+        out.println(s"${item.name} acquired")
         addToInventory(item)
-        case None => println("Item not found in room")
+        case None => out.println("Item not found in room")
       }
       // if there is any item:
     // items :: itemName
@@ -40,9 +40,11 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
       loc ! GetDescription
     }
     
+    case SayMsg(msg, room) => {
+      if (loc == room) out.println(msg)
+    }
 
-
-    case m => println("Unhandled msg in Player: " + m)
+    case m => out.println("Unhandled msg in Player: " + m)
   }
   var loc: ActorRef = null
     var inv: List[Item] = List()
@@ -72,12 +74,12 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
       }
       else if (command.startsWith("drop")) {
         val itemName = command.substring(5)
-        println(itemName)
+        out.println(itemName)
         getFromInventory(itemName) match {
           case Some(item) =>
           loc ! Room.DropItem(item)
-          println(s"$itemName dropped")
-          case None => println(s"$itemName not found in inventory")
+          out.println(s"$itemName dropped")
+          case None => out.println(s"$itemName not found in inventory")
         }
         }
       else if (command == "N") {
@@ -97,9 +99,14 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
       }
       else if (command == "D") {
         move("D")
+      }  
+      else if (command.startsWith("say")) {
+        Main.playMng ! PlayerManager.SayMsg(command.drop(4), loc)
       }
-    
-    
+      else if (command.startsWith("tell")) {
+        Main.playMng ! PlayerManager.TellMsg(command.drop(9), ???)
+      }
+      
     }
   
   def getFromInventory(itemName: String): Option[Item] = {
@@ -139,5 +146,7 @@ object Player {
   case class PrintMessage(msg: String)
   case class TakeItem(oitem: Option[Item])
   case class TakeExit(oroom: Option[ActorRef])
+  case class SayMsg(msg: String, room: ActorRef)
+  case class TellMsg(msg: String, player: ActorRef)
 }
 // 

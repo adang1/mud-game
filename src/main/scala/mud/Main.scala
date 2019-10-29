@@ -26,7 +26,7 @@ object Main extends App {
   
   system.scheduler.schedule(1.second, 0.1.second, playMng, PlayerManager.CheckAllInput)
 
-    val ss = ServerSocket(4041) 
+    val ss = new ServerSocket(4041) 
     while(true) {
       val sock = ss.accept()
      Future {
@@ -34,7 +34,7 @@ object Main extends App {
       out.println("What is your name?")
       val in = new BufferedReader(new InputStreamReader(sock.getInputStream()))
       val name = in.readLine()
-      println(name + " has connected.")
+      out.println(name + " has connected.")
       playMng ! PlayerManager.CreatePlayer(name, sock, out, in)
      }
     }

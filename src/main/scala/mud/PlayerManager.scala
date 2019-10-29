@@ -21,6 +21,10 @@ class PlayerManager extends Actor {
     for (child <- context.children) child ! Player.CheckAllInput
     case SendToAll(msg) =>  
     for (child <- context.children) child ! Player.PrintMessage(msg)
+    case SayMsg(msg, room) => 
+    for (child <- context.children) child ! Player.SayMsg(msg, room) 
+    case TellMsg(msg, player) =>
+    for (child <- context.children) child ! Player.TellMsg(msg, player)
     case m => println("Unhandled message in PlayerManager: " + m)
   }
 }
@@ -29,4 +33,6 @@ object PlayerManager {
   case class CreatePlayer(name: String, sock: Socket, out: PrintStream, in: BufferedReader)
   case object CheckAllInput
   case class SendToAll(msg: String)
+  case class SayMsg(msg: String, room: ActorRef)
+  case class TellMsg(msg: String, player: ActorRef)
 }
