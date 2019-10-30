@@ -7,6 +7,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.collection.mutable._
 /**
 This is a stub for the main class for your MUD.
 */
@@ -23,7 +24,7 @@ object Main extends App {
 
   val playMng = system.actorOf(Props[PlayerManager], "playMng")
   val roomMng = system.actorOf(Props[RoomManager], "roomMng")
-  
+  var plList: Set[String] = Set.empty
   system.scheduler.schedule(1.second, 0.1.second, playMng, PlayerManager.CheckAllInput)
 
     val ss = new ServerSocket(4041) 
@@ -34,8 +35,12 @@ object Main extends App {
       out.println("What is your name?")
       val in = new BufferedReader(new InputStreamReader(sock.getInputStream()))
       val name = in.readLine()
-      out.println(name + " has connected.")
-      playMng ! PlayerManager.CreatePlayer(name, sock, out, in)
+      if (!plList.contains(name)) {      
+        out.println(name + " has connected.")
+        playMng ! PlayerManager.CreatePlayer(name, sock, out, in)
+        plList += name
+      }
+      else out.println("name already exists")
      }
     }
   }

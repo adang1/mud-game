@@ -5,6 +5,7 @@ import akka.actor.ActorRef
 import java.io.PrintStream
 import java.io.BufferedReader
 import mud.Room.GetDescription
+import akka.actor.PoisonPill
 
 class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
   import Player._
@@ -104,9 +105,19 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
         Main.playMng ! PlayerManager.SayMsg(command.drop(4), loc)
       }
       else if (command.startsWith("tell")) {
-        Main.playMng ! PlayerManager.TellMsg(command.drop(9), ???)
+        var str = ""
+        val cmd = command.split(" ")
+        val msg = cmd.drop(2)
+        msg.foreach(a => str += a + " ")
+        val pl = cmd(1)
+        Main.playMng ! PlayerManager.TellMsg(str, pl)
       }
-      
+      else if (command == "exit") {
+        out.println("you left")
+        in.close()
+        out.close()
+        self ! PoisonPill
+      }
     }
   
   def getFromInventory(itemName: String): Option[Item] = {

@@ -24,7 +24,16 @@ class PlayerManager extends Actor {
     case SayMsg(msg, room) => 
     for (child <- context.children) child ! Player.SayMsg(msg, room) 
     case TellMsg(msg, player) =>
-    for (child <- context.children) child ! Player.TellMsg(msg, player)
+      var check = false
+      for (child <- context.children) {
+        if (child.path.name == player && !check)
+        { 
+          child ! Player.PrintMessage(msg)
+          check = true
+        }
+      }
+      if (!check) sender ! Player.PrintMessage("player not found")
+    
     case m => println("Unhandled message in PlayerManager: " + m)
   }
 }
@@ -34,5 +43,5 @@ object PlayerManager {
   case object CheckAllInput
   case class SendToAll(msg: String)
   case class SayMsg(msg: String, room: ActorRef)
-  case class TellMsg(msg: String, player: ActorRef)
+  case class TellMsg(msg: String, player: String)
 }
