@@ -13,34 +13,30 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
     case ProcessCommand(command) => {
       processCommand(command)
     }
-    case CheckAllInput => 
-    
-    if(in.ready()) {
-      val command = in.readLine()
-      
-      processCommand(command)
-    }
-    
+    case CheckAllInput =>
+      if (in.ready()) {
+        val command = in.readLine()
+
+        processCommand(command)
+      }
+
     case PrintMessage(msg) => out.println(msg)
     case TakeItem(oitem) => {
       oitem match {
-        case Some(item) => 
-        out.println(s"${item.name} acquired")
-        addToInventory(item)
+        case Some(item) =>
+          out.println(s"${item.name} acquired")
+          addToInventory(item)
         case None => out.println("Item not found in room")
       }
-      // if there is any item:
-    // items :: itemName
-      // else println("$itemname does not exist")
     }
     case TakeExit(oroom) => {
       oroom match {
-        case None => out.println("no exit in this direction")
+        case None       => out.println("no exit in this direction")
         case Some(room) => loc = room
       }
       loc ! GetDescription
     }
-    
+
     case SayMsg(msg, room) => {
       if (loc == room) out.println(msg)
     }
@@ -48,80 +44,67 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
     case m => out.println("Unhandled msg in Player: " + m)
   }
   var loc: ActorRef = null
-    var inv: List[Item] = List()
-    
-    def processCommand(command:String): Unit = {
-      if (command == "help") {
-        out.println ("N,S,E,W,U,D - for movements (north,south,east,west,up,down)")
-        out.println ("look - reprints the description of the current room")
-        out.println ("inv - list the contents in the inventory")
-        out.println ("get item - get an item and add to inventory")
-        out.println ("drop item - drop an item into the room")
-        out.println ("exit - leave the game")
-        out.println ("help - open the help menu")
-      }
-      else if (command == "look") {
-        loc ! GetDescription
-    
-      }
-      else if (command == "inv") {
-        out.println(inventoryListing())
-    
-      }
-      else if (command.startsWith("get")) {
-        val itemName = command.substring(4)
-        loc ! Room.GetItem(itemName)
-        
-      }
-      else if (command.startsWith("drop")) {
-        val itemName = command.substring(5)
-        out.println(itemName)
-        getFromInventory(itemName) match {
-          case Some(item) =>
+  var inv: List[Item] = List()
+
+  def processCommand(command: String): Unit = {
+    if (command == "help") {
+      out.println("N,S,E,W,U,D - for movements (north,south,east,west,up,down)")
+      out.println("look - reprints the description of the current room")
+      out.println("inv - list the contents in the inventory")
+      out.println("get item - get an item and add to inventory")
+      out.println("drop item - drop an item into the room")
+      out.println("exit - leave the game")
+      out.println("help - open the help menu")
+    } else if (command == "look") {
+      loc ! GetDescription
+
+    } else if (command == "inv") {
+      out.println(inventoryListing())
+
+    } else if (command.startsWith("get")) {
+      val itemName = command.substring(4)
+      loc ! Room.GetItem(itemName)
+
+    } else if (command.startsWith("drop")) {
+      val itemName = command.substring(5)
+      out.println(itemName)
+      getFromInventory(itemName) match {
+        case Some(item) =>
           loc ! Room.DropItem(item)
           out.println(s"$itemName dropped")
-          case None => out.println(s"$itemName not found in inventory")
-        }
-        }
-      else if (command == "N") {
-        move("N")
-        }
-      else if (command == "E") {
-        move("E")
+        case None => out.println(s"$itemName not found in inventory")
       }
-      else if (command == "W") {
-        move("W")
-      }
-      else if (command == "S") {
-        move("S")
-      }
-      else if (command == "U") {
-        move("U")
-      }
-      else if (command == "D") {
-        move("D")
-      }  
-      else if (command.startsWith("say")) {
-        Main.playMng ! PlayerManager.SayMsg(command.drop(4), loc)
-      }
-      else if (command.startsWith("tell")) {
-        var str = ""
-        val cmd = command.split(" ")
-        val msg = cmd.drop(2)
-        msg.foreach(a => str += a + " ")
-        val pl = cmd(1)
-        Main.playMng ! PlayerManager.TellMsg(str, pl)
-      }
-      else if (command == "exit") {
-        out.println("you left")
-        in.close()
-        out.close()
-        self ! PoisonPill
-      }
+    } else if (command == "N") {
+      move("N")
+    } else if (command == "E") {
+      move("E")
+    } else if (command == "W") {
+      move("W")
+    } else if (command == "S") {
+      move("S")
+    } else if (command == "U") {
+      move("U")
+    } else if (command == "D") {
+      move("D")
+    } else if (command.startsWith("say")) {
+      Main.playMng ! PlayerManager.SayMsg(command.drop(4), loc)
+    } else if (command.startsWith("tell")) {
+      var str = ""
+      val cmd = command.split(" ")
+      val msg = cmd.drop(2)
+      msg.foreach(a => str += a + " ")
+      val pl = cmd(1)
+      Main.playMng ! PlayerManager.TellMsg(str, pl)
+    } else if (command == "exit") {
+      out.println("you left")
+      in.close()
+      out.close()
+      self ! PoisonPill
     }
-  
+  }
+
   def getFromInventory(itemName: String): Option[Item] = {
-    val foundItem = inv.find(x => itemName == x.name) 
+    val foundItem = inv.find(x => itemName == x.name)
     inv = inv.filterNot(x => itemName == x.name)
     foundItem
   }
@@ -133,11 +116,11 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
     for (x <- inv) {
       invlist += x.name + ","
     }
-  invlist
+    invlist
   }
-  
+
   def move(dir: String): Unit = {
-    
+
     var dirInd = 0
     if (dir == "N") dirInd = 0
     if (dir == "S") dirInd = 1
@@ -147,9 +130,8 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
     if (dir == "D") dirInd = 5
     loc ! Room.GetExit(dirInd)
   }
-  
-  }
 
+}
 
 object Player {
   case class ProcessCommand(command: String)
@@ -160,4 +142,4 @@ object Player {
   case class SayMsg(msg: String, room: ActorRef)
   case class TellMsg(msg: String, player: ActorRef)
 }
-// 
+
