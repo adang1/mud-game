@@ -30,17 +30,24 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
       }
     }
     case TakeExit(oroom) => {
+      if (loc != null) {
+      loc ! Room.RemovePlayer()
+      }
       oroom match {
         case None       => out.println("no exit in this direction")
         case Some(room) => loc = room
       }
-      loc ! GetDescription
+      loc ! Room.AddPlayer()  
+      loc ! GetDescription 
     }
 
     case SayMsg(msg, room) => {
       if (loc == room) out.println(msg)
     }
-
+    //case BeAttacked
+    //case EnemyAlive 
+    //case FoundVictim
+    //case Attack
     case m => out.println("Unhandled msg in Player: " + m)
   }
   var loc: ActorRef = null
@@ -102,6 +109,8 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
       self ! PoisonPill
     }
   }
+    //else if (command == "flee") loc ! Room.GetExit(util.Random.nextInt(6))
+    //else if (command == "equip") if (!inv.isEmpty) 
 
   def getFromInventory(itemName: String): Option[Item] = {
     val foundItem = inv.find(x => itemName == x.name)
@@ -130,7 +139,7 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
     if (dir == "D") dirInd = 5
     loc ! Room.GetExit(dirInd)
   }
-
+//def kill()
 }
 
 object Player {

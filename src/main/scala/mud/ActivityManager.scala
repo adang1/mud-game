@@ -23,6 +23,7 @@ class ActivityManager extends Actor {
                 activity.actor ! activity.msg
             }
         }
+        case m => println("Unhandled message in ActivityMng: " + m)
     }
 }
 

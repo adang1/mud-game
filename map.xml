@@ -5,6 +5,7 @@
 <item name = "chair">something to sit on</item>
 <item name = "computer">useful tool</item>
 <item name = "board">doodling tool</item>
+<NPC name = "bot1"></NPC>
 </Room>
 <Room name="pod" keyword="p">
 <description>where you buy food</description>
@@ -17,6 +18,7 @@
 <exits>c,-1,-1,-1,-1,-1</exits>
 <item name = "trashcans">receiver of trash</item>
 <item name = "water fountain">hydrator</item>
+<NPC name="bot2"></NPC>
 </Room>
 <Room name="icecube" keyword="i">
 <description>because its so cold all the time</description>
@@ -30,5 +32,6 @@
 <exits>-1,-1,c,-1,-1,-1</exits>
 <item name = "professor">teacher</item>
 <item name = "computer">useful tool</item>
+<NPC name = "bot3"></NPC>
 </Room>
 </Rooms>

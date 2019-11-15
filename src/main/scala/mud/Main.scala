@@ -21,9 +21,11 @@ object Main extends App {
   
 
   implicit val ec = system.dispatcher
-
+  
   val playMng = system.actorOf(Props[PlayerManager], "playMng")
   val roomMng = system.actorOf(Props[RoomManager], "roomMng")
+  val npcMng = system.actorOf(Props[NPCManager], "npcMng")
+  val actMng = system.actorOf(Props[ActivityManager], "actMng")
   var plList: Set[String] = Set.empty
   system.scheduler.schedule(1.second, 0.1.second, playMng, PlayerManager.CheckAllInput)
 

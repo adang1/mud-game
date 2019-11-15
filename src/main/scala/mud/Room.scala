@@ -10,7 +10,7 @@ class Room(
     private val exitKeys: Array[String],
     private var items: List[Item]
 ) extends Actor {
-
+  private var players: List[ActorRef] = List.empty
   private var exits: Array[Option[ActorRef]] = null
   import Room._
 
@@ -25,6 +25,11 @@ class Room(
     sender ! Player.TakeExit(getExit(dir))
     case GetDescription => 
       sender ! Player.PrintMessage(description())
+    case AddPlayer() =>
+    addPlayer(sender) 
+    case RemovePlayer() =>
+    removePlayer(sender)
+   
     case m => println("Unhandled msg in Room: " + m)
 
   }
@@ -49,7 +54,7 @@ class Room(
   }
 
   def description(): String =
-    name + "\n" + desc + "\n" + printExits() + "\n" + printItems()
+    name + "\n" + desc + "\n" + printExits() + "\n" + printItems() + "\n" + printPlayer()
 
   def getExit(dir: Int): Option[ActorRef] = {
     exits(dir)
@@ -71,12 +76,26 @@ class Room(
     }
   }
   def dropItem(item: Item): Unit = items ::= item
+  def addPlayer(player: ActorRef): Unit = {
+    players = player :: players 
+  }
+  def removePlayer(player: ActorRef): Unit = {
+    players = players.filter(p => player.path.name != p.path.name)
+  }
+  def printPlayer(): String = {
+  var playerlist: String = ""
+  for (x <- players) {
+    playerlist += x.path.name + ","
+  }
+  playerlist
 }
-
+}
 object Room {
   case class GetItem(itemName: String)
   case class DropItem(item: Item)
   case class GetExit(dir: Int)
 	case object GetDescription
-	case class LinkExits(rooms: Map[String, ActorRef])
+  case class LinkExits(rooms: Map[String, ActorRef])
+  case class AddPlayer()
+  case class RemovePlayer()
 }
