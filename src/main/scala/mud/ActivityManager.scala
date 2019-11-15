@@ -17,7 +17,7 @@ class ActivityManager extends Actor {
         case ScheduleActivity(delay, actor, msg) =>
         pq.enqueue(Activity(curTime + delay, actor, msg))
         case CheckQueue => {
-            curTime + 1 
+            curTime += 1 
             while ((!pq.isEmpty) && (pq.peek.time <= curTime)) {
                 val activity = pq.dequeue()
                 activity.actor ! activity.msg

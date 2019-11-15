@@ -19,10 +19,14 @@ class NPC(val name: String) extends Actor {
           case Some(room) => loc = room
         }
         loc ! Room.AddPlayer()
-        Main.actMng ! ActivityManager.ScheduleActivity(5000, self, NPC.Move)
+        Main.actMng ! ActivityManager.ScheduleActivity(100, self, NPC.Move)
       }
       
-      case Move => loc ! Room.GetExit(util.Random.nextInt(6)) // Working on NPC moving
+      case Move => {
+        println("moved")
+        loc ! Room.GetExit(util.Random.nextInt(6)) // Working on NPC moving
+        Main.playMng ! PlayerManager.SayMsg(name + " is the highest in the room.", loc)
+      }
     case m => println("Unhandled msg in NPC:" + m)
   }
 }

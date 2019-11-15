@@ -28,6 +28,7 @@ object Main extends App {
   val actMng = system.actorOf(Props[ActivityManager], "actMng")
   var plList: Set[String] = Set.empty
   system.scheduler.schedule(1.second, 0.1.second, playMng, PlayerManager.CheckAllInput)
+  system.scheduler.schedule(1.second, 0.1.second, actMng, ActivityManager.CheckQueue)
 
     val ss = new ServerSocket(4041) 
     while(true) {
