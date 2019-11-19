@@ -9,6 +9,8 @@ import akka.actor.PoisonPill
 
 class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
   import Player._
+  private var health = 100
+
   def receive = {
     case ProcessCommand(command) => {
       processCommand(command)
@@ -52,7 +54,7 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
   }
   var loc: ActorRef = null
   var inv: List[Item] = List()
-
+  var itemEquip: Option[Item] = None
   def processCommand(command: String): Unit = {
     if (command == "help") {
       out.println("N,S,E,W,U,D - for movements (north,south,east,west,up,down)")
@@ -108,7 +110,33 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
       out.close()
       self ! PoisonPill
     }
+    else if (command == "flee") {
+  loc ! Room.GetExit(util.Random.nextInt(6))
+    }
+    else if (command.startsWith("equip")) {
+      val itemName = command.substring(6)
+      if (!inv.isEmpty) {
+        for (i <- inv) {
+          if (itemName == i.name) {
+            itemEquip = Some(i)
+            inv = inv.filter(_ != i)
+          }
+        }
+      }
+      else itemEquip = None
+    }
+    else if (command.startsWith("unequip")) {
+     itemEquip match {
+       case None => out.println("you are not equipped")
+       case Some(item) => {
+       addToInventory(item)
+       itemEquip = None
+       }
+     }
+    }
   }
+  
+
     //else if (command == "flee") loc ! Room.GetExit(util.Random.nextInt(6))
     //else if (command == "equip") if (!inv.isEmpty) 
 

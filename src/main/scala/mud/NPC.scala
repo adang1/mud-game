@@ -7,6 +7,8 @@ import Player._
 import mud.NPC.Move
 class NPC(val name: String) extends Actor {
   var loc: ActorRef = null
+  private var health = 50
+
   //Main.actMng ! ActivityManager.ScheduleActivity(5000, self, Move)
   def receive = {
 
@@ -24,8 +26,8 @@ class NPC(val name: String) extends Actor {
       
       case Move => {
         println("moved")
-        loc ! Room.GetExit(util.Random.nextInt(6)) // Working on NPC moving
-        Main.playMng ! PlayerManager.SayMsg(name + " is the highest in the room.", loc)
+        loc ! Room.GetExit(util.Random.nextInt(6)) 
+        Main.playMng ! PlayerManager.SayMsg(name + " joined the room.", loc)
       }
     case m => println("Unhandled msg in NPC:" + m)
   }

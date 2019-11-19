@@ -9,7 +9,6 @@ import mud.RoomManager.AddPlayerToRoom
 
 
 class PlayerManager extends Actor {
-
   import PlayerManager._
   def receive = {
     case CreatePlayer(nameOfNewPlayer, sock, out, in) => {

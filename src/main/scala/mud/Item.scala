@@ -1,7 +1,9 @@
 package mud
 
 case class Item (name: String,
-            desc: String) {
+            desc: String,
+            damage: Int,
+            speed: Int) {
                 
             }
   
