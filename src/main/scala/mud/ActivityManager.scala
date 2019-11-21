@@ -22,7 +22,7 @@ class ActivityManager extends Actor {
                 val activity = pq.dequeue()
                 activity.actor ! activity.msg
             }
-        }
+        } 
         case m => println("Unhandled message in ActivityMng: " + m)
     }
 }

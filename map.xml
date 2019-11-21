@@ -2,36 +2,36 @@
 <Room name="CSI 257" keyword="c">
 <description>computer science classroom</description>
 <exits>p,h,i,d,-1,-1</exits>
-<item name = "chair">something to sit on</item>
-<item name = "computer">useful tool</item>
-<item name = "board">doodling tool</item>
-<NPC name = "bot1"></NPC>
+<item name="chair" speed="5" damage="5">something to sit on</item>
+<item name="computer" speed="2" damage="10">useful tool</item>
+<item name="board" speed="1" damage="20">doodling tool</item>
+<NPC name="bot1"></NPC>
 </Room>
 <Room name="pod" keyword="p">
 <description>where you buy food</description>
 <exits>-1,c,-1,-1,-1,-1</exits>
-<item name = "food">expensive</item> 
-<item name = "candies">unhealthy</item>
+<item name="food" speed="10" damage="1">expensive</item> 
+<item name="candies" speed="10" damage="2">unhealthy</item>
 </Room>
 <Room name="hallway" keyword="h">
 <description>connects the cs dept to the main hall</description>
 <exits>c,-1,-1,-1,-1,-1</exits>
-<item name = "trashcans">receiver of trash</item>
-<item name = "water fountain">hydrator</item>
+<item name="trashcans" speed="5" damage="5">receiver of trash</item>
+<item name = "water fountain" speed="1" damage="20">hydrator</item>
 <NPC name="bot2"></NPC>
 </Room>
 <Room name="icecube" keyword="i">
 <description>because its so cold all the time</description>
 <exits>-1,-1,-1,c,1,-1</exits>
-<item name = "chair">something to sit on</item>
-<item name = "table">something not to sit on</item>
-<item name = "board">doodling tool</item>
+<item name="chair" speed="5" damage="5">something to sit on</item>
+<item name="table" speed="1" damage="10">something not to sit on</item>
+<item name="board" speed="1" damage="20">doodling tool</item>
 </Room>
 <Room name="cs dept" keyword="d">
 <description>where magic happens</description>
 <exits>-1,-1,c,-1,-1,-1</exits>
-<item name = "professor">teacher</item>
-<item name = "computer">useful tool</item>
-<NPC name = "bot3"></NPC>
+<item name="professor" speed="5" damage="1">teacher</item>
+<item name="computer" speed="2" damage="10">useful tool</item>
+<NPC name="bot3"></NPC>
 </Room>
 </Rooms>

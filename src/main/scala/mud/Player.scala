@@ -9,8 +9,13 @@ import akka.actor.PoisonPill
 
 class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
   import Player._
+  import Item._
+  import Room._
   private var health = 100
-
+  private var victims: Option[ActorRef] = None
+  var loc: ActorRef = null
+  var inv: List[Item] = List()
+  var itemEquip: Option[Item] = None
   def receive = {
     case ProcessCommand(command) => {
       processCommand(command)
@@ -33,7 +38,7 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
     }
     case TakeExit(oroom) => {
       if (loc != null) {
-      loc ! Room.RemovePlayer()
+      loc ! Room.RemovePlayer(self)
       }
       oroom match {
         case None       => out.println("no exit in this direction")
@@ -46,15 +51,65 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
     case SayMsg(msg, room) => {
       if (loc == room) out.println(msg)
     }
-    //case BeAttacked
-    //case EnemyAlive 
-    //case FoundVictim
-    //case Attack
+
+    case FoundVictim(victim) => {
+      victims = victim
+      itemEquip match {
+        case None => out.println("you don't have any weapon")
+        case Some(item) =>
+        victim match {
+          case None => out.println("victim's not here")
+          case Some(victim) => {
+        Main.actMng ! ActivityManager.ScheduleActivity(10-item.speed, self, Player.DoHit(victim)) 
+      }
+    }
+  }
+}
+    case Hit(damage, _loc) => {
+      if (_loc == loc) {
+      health -= damage
+      }
+      else {
+        out.println("the victim is in different room")
+      }
+      var status = 3
+      if (_loc != loc) status = 2
+      else if (health <= 0) status = 0
+      else status = 1
+      sender ! Player.HitStatus(status, loc) 
+    }
+    case HitStatus(status, loc) => {
+      status match {
+        case 0 => {
+        out.println("your dead")
+        in.close()
+        out.close()
+        loc ! Room.RemovePlayer(self)
+        self ! PoisonPill
+
+      }
+        case 1 => {
+          itemEquip match {
+            case None => out.println("you're not equipped")
+            case Some(item) => sender ! Player.Hit(item.damage, loc)
+          } 
+      }
+        case 2 => {
+          out.println("they've escaped")
+        }
+      }
+    }
+    case DoHit(victim) => {
+      itemEquip match {
+        case None => out.println("you can't do damage")
+        case Some(item) =>
+        victim ! Player.Hit(item.damage, loc)
+      }
+    }
+
     case m => out.println("Unhandled msg in Player: " + m)
   }
-  var loc: ActorRef = null
-  var inv: List[Item] = List()
-  var itemEquip: Option[Item] = None
+  
   def processCommand(command: String): Unit = {
     if (command == "help") {
       out.println("N,S,E,W,U,D - for movements (north,south,east,west,up,down)")
@@ -134,12 +189,12 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
        }
      }
     }
+    else if (command.startsWith("kill")) {
+      var victim = command.substring(5)
+      loc ! Room.FindVictim(victim)
+    }
   }
   
-
-    //else if (command == "flee") loc ! Room.GetExit(util.Random.nextInt(6))
-    //else if (command == "equip") if (!inv.isEmpty) 
-
   def getFromInventory(itemName: String): Option[Item] = {
     val foundItem = inv.find(x => itemName == x.name)
     inv = inv.filterNot(x => itemName == x.name)
@@ -167,9 +222,7 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
     if (dir == "D") dirInd = 5
     loc ! Room.GetExit(dirInd)
   }
-//def kill()
 }
-
 object Player {
   case class ProcessCommand(command: String)
   case object CheckAllInput
@@ -178,5 +231,9 @@ object Player {
   case class TakeExit(oroom: Option[ActorRef])
   case class SayMsg(msg: String, room: ActorRef)
   case class TellMsg(msg: String, player: ActorRef)
+  case class FoundVictim(victim: Option[ActorRef])
+  case class Hit(damage: Int, loc: ActorRef)
+  case class DoHit(victim: ActorRef)
+  case class HitStatus(status: Int, loc: ActorRef)
 }
 

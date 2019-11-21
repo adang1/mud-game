@@ -3,18 +3,18 @@ import akka.actor.Actor
 import akka.actor.ActorRef
 import akka.actor.Props
 import mud.Room.GetDescription
-import Player._
+import mud.Player._
 import mud.NPC.Move
 class NPC(val name: String) extends Actor {
   var loc: ActorRef = null
   private var health = 50
 
-  //Main.actMng ! ActivityManager.ScheduleActivity(5000, self, Move)
+  
   def receive = {
 
     case Player.TakeExit(oroom) => {
       if (loc != null) {
-        loc ! Room.RemovePlayer()
+        loc ! Room.RemovePlayer(self)
         }
         oroom match {
           case None       => 

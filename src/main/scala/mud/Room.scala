@@ -27,8 +27,10 @@ class Room(
       sender ! Player.PrintMessage(description())
     case AddPlayer() =>
     addPlayer(sender) 
-    case RemovePlayer() =>
+    case RemovePlayer(player) =>
     removePlayer(sender)
+    case FindVictim(victim) => 
+    sender ! Player.FoundVictim(players.find(_.path.name == victim))
    
     case m => println("Unhandled msg in Room: " + m)
 
@@ -97,5 +99,6 @@ object Room {
 	case object GetDescription
   case class LinkExits(rooms: Map[String, ActorRef])
   case class AddPlayer()
-  case class RemovePlayer()
+  case class RemovePlayer(player: ActorRef)
+  case class FindVictim(victim: String)
 }
