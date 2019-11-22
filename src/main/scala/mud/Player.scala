@@ -193,6 +193,13 @@ class Player(name: String, out: PrintStream, in: BufferedReader) extends Actor {
       var victim = command.substring(5)
       loc ! Room.FindVictim(victim)
     }
+    else if (command.startsWith("shortestPath")) {
+      val objective = command.substring(13)
+      if (victims == None) Main.roomMng ! RoomManager.GetShortestPath((loc.path.name), objective)
+    }
+    else if (command == "listRooms") {
+      Main.roomMng ! RoomManager.PrintRooms
+    }
   }
   
   def getFromInventory(itemName: String): Option[Item] = {
