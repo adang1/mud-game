@@ -1,37 +1,47 @@
 <Rooms> 
 <Room name="CSI 257" keyword="c">
-<description>computer science classroom</description>
+<description>computer science classroom.</description>
 <exits>p,h,i,d,-1,-1</exits>
 <item name="chair" speed="5" damage="5">something to sit on</item>
 <item name="computer" speed="2" damage="10">useful tool</item>
 <item name="board" speed="1" damage="20">doodling tool</item>
-<NPC name="bot1"></NPC>
+<NPC name="CShomework"></NPC>
 </Room>
 <Room name="pod" keyword="p">
-<description>where you buy food</description>
+<description>where you buy food.</description>
 <exits>-1,c,-1,-1,-1,-1</exits>
 <item name="food" speed="10" damage="1">expensive</item> 
 <item name="candies" speed="10" damage="2">unhealthy</item>
 </Room>
 <Room name="hallway" keyword="h">
-<description>connects the cs dept to the main hall</description>
-<exits>c,-1,-1,-1,-1,-1</exits>
+<description>connects the cs dept to the main hall.</description>
+<exits>c,o,-1,-1,-1,-1</exits>
 <item name="trashcans" speed="5" damage="5">receiver of trash</item>
 <item name = "water fountain" speed="1" damage="20">hydrator</item>
-<NPC name="bot2"></NPC>
 </Room>
 <Room name="icecube" keyword="i">
-<description>because its so cold all the time</description>
-<exits>-1,-1,-1,c,1,-1</exits>
+<description>because its so cold all the time.</description>
+<exits>-1,e,-1,c,-1,-1</exits>
 <item name="chair" speed="5" damage="5">something to sit on</item>
 <item name="table" speed="1" damage="10">something not to sit on</item>
 <item name="board" speed="1" damage="20">doodling tool</item>
 </Room>
+<Room name="engr cube" keyword="e">
+<description>where Duncan lives.</description>
+<exits>i,-1,-1,-1,-1,-1</exits>
+<item name="professor" speed="5" damage="1">teacher</item>
+<item name="computer" speed="2" damage="10">useful tool</item>
+<NPC name="ENGRhomework"></NPC>
+</Room>
 <Room name="cs dept" keyword="d">
-<description>where magic happens</description>
+<description>where magic happens.</description>
 <exits>-1,-1,c,-1,-1,-1</exits>
 <item name="professor" speed="5" damage="1">teacher</item>
 <item name="computer" speed="2" damage="10">useful tool</item>
-<NPC name="bot3"></NPC>
+</Room>
+<Room name="outside world" keyword="o">
+<description>you are done with finals and can head out.</description>
+<exits>h,-1,-1,-1,-1,-1</exits>
+<item name="video games" speed="1" damage="50"></item>
 </Room>
 </Rooms>
